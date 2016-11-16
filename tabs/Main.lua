@@ -13,18 +13,18 @@ local digit6
 local digit7
 local digit8 
 local digit9
-local number0 = 0
-local number1 = 1
-local number2 = 2
-local number3 = 3
-local number4 = 4
-local number5 = 5
-local number6 = 6
-local number7 = 7
-local number8 = 8
-local number9 = 9
+local backspace
+local enter
 local buttonLocationX = (50)
 local buttonLocationY = (HEIGHT/2)
+local entireNumber = ""
+local randomNumber1 = math.random(1, 99)
+local randomNumber2 = math.random(1, 99)
+local operators = {"+", "-", "*", "/"}
+local displayOperator = operators [ math.random(1,#operators)]
+local answer
+local promptUser
+local promptUser2
 
 
 -- Use this function to perform your initial setup
@@ -46,10 +46,13 @@ function setup()
     digit7 = Button("Project:number7", vec2(WIDTH/2.4, HEIGHT/2.5))
     digit8 = Button("Project:number8", vec2(WIDTH/6, HEIGHT/3.5))
     digit9 = Button("Project:number9", vec2(WIDTH/4, HEIGHT/3.5))
-
+    backspace = Button("Project:backspace", vec2(WIDTH/2.7, HEIGHT/3.5))
+    enter = Button("Project:enter", vec2(WIDTH/2.7, HEIGHT/6))
+    
 end
 
 function touched(touch)
+    
     
     buttonClicked = true
     digit0:touched(touch) 
@@ -62,12 +65,64 @@ function touched(touch)
     digit7:touched(touch)
     digit8:touched(touch)    
     digit9:touched(touch)
-    
-        if(buttonClicked ==true)then 
-        buttonLocationX = buttonLocationX+5
+    backspace:touched(touch)
+    enter:touched(touch)
+    -- moveing the numbers 
+    if (digit0.selected == true)then
+        entireNumber=entireNumber.. 0
+    end
+    if (digit1.selected == true)then
+        entireNumber=entireNumber.. 1
+    end
+    if (digit2.selected == true)then
+        entireNumber=entireNumber.. 2
+    end
+    if (digit3.selected == true)then
+        entireNumber=entireNumber.. 3
+    end
+    if (digit4.selected == true)then
+        entireNumber=entireNumber.. 4
+    end
+    if (digit5.selected == true)then
+        entireNumber=entireNumber.. 5
+    end
+    if (digit6.selected == true)then
+        entireNumber=entireNumber.. 6
+    end
+    if (digit7.selected == true)then
+        entireNumber=entireNumber.. 7
+    end
+    if (digit8.selected == true)then
+        entireNumber=entireNumber.. 8
+    end
+    if (digit9.selected == true)then
+        entireNumber=entireNumber.. 9
+    end
+    if (backspace.selected == true)then
+        entireNumber = string.sub(entireNumber,0,string.len(entireNumber) - 1)
+    end
+    if(enter.selected ==true or buttonClicked == true)then
+        if(operators == "+")then
+            answer = tonumber (randomNumber1 ) + tonumber(randomNumber2)
+            
+            
+        end
+        if(operators == "-")then
+            answer= tonumber (randomNumber1 ) - tonumber(randomNumber2)
+            
+        end
+        if(operators == "*")then
+            answer= tonumber (randomNumber1 ) * tonumber(randomNumber2)
+                      
+            
+        end
+        if(operators == "/")then
+            answer= tonumber (randomNumber1 ) / tonumber(randomNumber2)
+            
+        end
+
     end
     
-      
 
 end
 
@@ -95,39 +150,58 @@ function draw()
     digit7:draw()
     digit8:draw()
     digit9:draw()
+    backspace:draw()
+    enter:draw()
     
+
+    promptUser = "can you solve ".. randomNumber1 ..  displayOperator .. randomNumber2
+    text(promptUser, WIDTH/3, HEIGHT/1.8)
     
-    if(digit0.selected == true or buttonClicked == true )then
-        text(""..number0, buttonLocationX, 50)
+
+    -- displays numbers 
+    if(digit0.selected == true or buttonClicked ==true )then
+        
+        text(""..entireNumber, buttonLocationX, HEIGHT/20)
     end
     if (digit1.selected == true)then
-        text(""..number1, buttonLocationX,50)
+        text(""..entireNumber, buttonLocationX,HEIGHT/20)
     end
     if (digit2.selected == true)then
-        text(""..number2,buttonLocationX,50 )
+        text(""..entireNumber,buttonLocationX,HEIGHT/20 )
     end
     if (digit3.selected == true)then
-        text(""..number3,buttonLocationX,50 )
+        text(""..entireNumber,buttonLocationX,HEIGHT/20 )
     end
     if (digit4.selected == true)then
-        text(""..number4,buttonLocationX,50 )
+        text(""..entireNumber,buttonLocationX,HEIGHT/20 )
     end
     if (digit5.selected == true)then
-        text(""..number5,buttonLocationX,50 )
+        text(""..entireNumber,buttonLocationX,HEIGHT/20 )
     end
     if (digit6.selected == true)then
-        text(""..number6, buttonLocationX,50)
+        text(""..entireNumber, buttonLocationX,HEIGHT/20)
     end
     if (digit7.selected == true)then
-        text(""..number7, buttonLocationX,50)
+        text(""..entireNumber, buttonLocationX,HEIGHT/20)
     end
     if (digit8.selected == true)then
-        text(""..number8,buttonLocationX,50 )
+        text(""..entireNumber,buttonLocationX,HEIGHT/20 )
     end
     if (digit9.selected == true)then
-        text(""..number9,buttonLocationX,50 )
+        text(""..entireNumber,buttonLocationX,HEIGHT/20 )
     end
-   
+    if(enter.selected == true) then
+        if(answer == entireNumber )then
+            promptUser2 = "correct"
+        end
+        if(entireNumber ~= answer )then
+            promptUser2 = "wrong"
+            print(answer)
+        end
+      text(promptUser2, WIDTH/3, HEIGHT/1.5)  
+         
+    end 
+  
 end
 
 
