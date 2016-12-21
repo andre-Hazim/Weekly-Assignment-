@@ -1,4 +1,9 @@
--- Setup
+--Weekly Assignment
+
+--created by Andre hazim
+--created on nov 16
+--created for ICSO2
+--this program displays math questions and lets you solve them
 
 
 --local varibles 
@@ -15,6 +20,7 @@ local digit8
 local digit9
 local backspace
 local enter
+local reset
 local buttonLocationX = (50)
 local buttonLocationY = (HEIGHT/2)
 local entireNumber = ""
@@ -25,7 +31,9 @@ local displayOperator = operators [ math.random(1,#operators)]
 local answer
 local promptUser
 local promptUser2
-
+local promptUser3
+local temp
+ 
 
 -- Use this function to perform your initial setup
 function setup()
@@ -48,6 +56,7 @@ function setup()
     digit9 = Button("Project:number9", vec2(WIDTH/4, HEIGHT/3.5))
     backspace = Button("Project:backspace", vec2(WIDTH/2.7, HEIGHT/3.5))
     enter = Button("Project:enter", vec2(WIDTH/2.7, HEIGHT/6))
+    reset = Button("Project:resetButton", vec2 (WIDTH/4.5, HEIGHT/6))
     
 end
 
@@ -67,6 +76,7 @@ function touched(touch)
     digit9:touched(touch)
     backspace:touched(touch)
     enter:touched(touch)
+    reset:touched(touch)
     -- moveing the numbers 
     if (digit0.selected == true)then
         entireNumber=entireNumber.. 0
@@ -101,30 +111,42 @@ function touched(touch)
     if (backspace.selected == true)then
         entireNumber = string.sub(entireNumber,0,string.len(entireNumber) - 1)
     end
-    if(enter.selected ==true or buttonClicked == true)then
-        if(operators == "+")then
-            answer = tonumber (randomNumber1 ) + tonumber(randomNumber2)
+    if(enter.selected ==true  )then
+        if(displayOperator == "+")then
+            answer = tonumber(randomNumber1 ) +tonumber(randomNumber2)  
             
+        elseif(displayOperator == "-")then
+            if (randomNumber1<randomNumber2)then
+                
+                answer = tonumber(randomNumber2) - tonumber(randomNumber1)
+            else 
+                answer= tonumber (randomNumber1 ) - tonumber(randomNumber2)
+                
+            end
             
         end
-        if(operators == "-")then
-            answer= tonumber (randomNumber1 ) - tonumber(randomNumber2)
             
-        end
-        if(operators == "*")then
+        elseif(displayOperator == "*")then
             answer= tonumber (randomNumber1 ) * tonumber(randomNumber2)
-                      
+             
             
-        end
-        if(operators == "/")then
-            answer= tonumber (randomNumber1 ) / tonumber(randomNumber2)
-            
+        elseif(displayOperator == "/")then
+        randomNumber1 = randomNumber1 * randomNumber2
+        answer = tonumber (randomNumber1)/ tonumber (randomNumber2)
+        answer = math.floor (answer)
+        
+        
+        
         end
 
+    
+    if(reset.selected == true)then 
+        restart()
     end
     
-
 end
+
+
 
 -- This function gets called once every frame
 function draw()
@@ -152,9 +174,24 @@ function draw()
     digit9:draw()
     backspace:draw()
     enter:draw()
+    reset:draw()
+    
+    if (displayOperator == '-')then
+        if(randomNumber1<randomNumber2)then
+           promptUser = "can you solve ".. randomNumber2 ..  displayOperator .. randomNumber1
+            else
+            promptUser = "can you solve ".. randomNumber1 ..  displayOperator .. randomNumber2
+            
+        end
+            
+    else
+        promptUser = "can you solve ".. randomNumber1 ..  displayOperator .. randomNumber2
+    
+    end
     
 
-    promptUser = "can you solve ".. randomNumber1 ..  displayOperator .. randomNumber2
+    
+    
     text(promptUser, WIDTH/3, HEIGHT/1.8)
     
 
@@ -191,15 +228,15 @@ function draw()
         text(""..entireNumber,buttonLocationX,HEIGHT/20 )
     end
     if(enter.selected == true) then
-        if(answer == entireNumber )then
+        if(answer == tonumber (entireNumber) )then
             promptUser2 = "correct"
-        end
-        if(entireNumber ~= answer )then
-            promptUser2 = "wrong"
-            print(answer)
+        else
+            promptUser2 ='wrong'
+        
         end
       text(promptUser2, WIDTH/3, HEIGHT/1.5)  
-         
+      
+          
     end 
   
 end
